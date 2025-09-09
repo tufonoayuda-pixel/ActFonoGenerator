@@ -3,30 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🧠 Generador de Actividades Fonoaudiológicas</title>
+  <title>🧠 Generador IA de Actividades Fonoaudiológicas</title>
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
+  <!-- 🌈 Fondo animado -->
   <div class="background-animation"></div>
+
+  <!-- 🎭 Contenedor principal con glassmorphism -->
   <div class="container">
-    <div class="card glass">
+    <div class="main-card glass">
+      <!-- 🧠 Header con icono y título -->
       <div class="header">
         <div class="header-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"></path><path d="m16 6-4-4-4 4"></path><path d="M18.7 8.7a4 4 0 0 0-5.4-5.4L12 4.6"></path><path d="M5.3 8.7a4 4 0 0 1 5.4-5.4L12 4.6"></path><path d="M19 15v2a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4v-2"></path><path d="M12 10v10"></path></svg>
         </div>
         <div class="header-text">
-          <h1>Generador de Actividades Fonoaudiológicas</h1>
-          <p>Potenciado con Inteligencia Artificial para Fonoaudiólog@s</p>
+          <h1>Generador IA de Actividades Fonoaudiológicas</h1>
+          <p>✨ Potenciado con Inteligencia Artificial para Fonoaudiólog@s</p>
         </div>
       </div>
 
       <div class="main-grid">
-        <!-- Formulario -->
+        <!-- 📝 Formulario -->
         <div class="form-section">
-          <!-- Información del Usuario -->
-          <div class="form-card">
+          <!-- 👤 Información del Usuario -->
+          <div class="form-card glass">
             <div class="form-header">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               <h2>Información del Usuario</h2>
@@ -37,12 +40,12 @@
             </div>
             <div class="checkbox-group">
               <input type="checkbox" id="isPediatric">
-              <label for="isPediatric">Sesión Pediátrica (lenguaje lúdico adaptado)</label>
+              <label for="isPediatric">🎯 Sesión Pediátrica (lenguaje lúdico adaptado)</label>
             </div>
           </div>
 
-          <!-- Objetivo y Sesión -->
-          <div class="form-card">
+          <!-- 🎯 Objetivo y Sesión -->
+          <div class="form-card glass">
             <div class="form-header">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
               <h2>Objetivo y Sesión</h2>
@@ -54,11 +57,11 @@
             </div>
             <div class="grid-2">
               <div class="form-group">
-                <label>Duración (minutos)</label>
+                <label>⏱️ Duración (minutos)</label>
                 <input id="duration" type="number" min="15" max="120" placeholder="30">
               </div>
               <div class="form-group">
-                <label>Tipo de sesión</label>
+                <label>👥 Tipo de sesión</label>
                 <select id="sessionType">
                   <option value="individual">Individual</option>
                   <option value="grupal">Grupal</option>
@@ -68,11 +71,11 @@
             </div>
           </div>
 
-          <!-- Contexto Adicional -->
-          <div class="form-card">
-            <button id="toggleAdvanced" class="expand-btn">
+          <!-- ⚙️ Contexto Adicional (Expandible) -->
+          <div class="form-card glass">
+            <button id="toggleAdvanced" class="expand-btn glass">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"></path><path d="m16 6-4-4-4 4"></path><path d="M18.7 8.7a4 4 0 0 0-5.4-5.4L12 4.6"></path><path d="M5.3 8.7a4 4 0 0 1 5.4-5.4L12 4.6"></path><path d="M19 15v2a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4v-2"></path><path d="M12 10v10"></path></svg>
-              <span>Contexto Adicional (Opcional)</span>
+              <span>📚 Contexto Adicional (Opcional)</span>
               <svg id="chevronIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
             <div id="advancedSection" class="advanced-section hidden">
@@ -80,42 +83,80 @@
                 <label>Contexto adicional detallado</label>
                 <textarea id="customContext" placeholder="Describe aquí todos los aspectos adicionales..." rows="8"></textarea>
               </div>
-              <div class="tips-box">
+              <div class="tips-box glass">
                 <h4>💡 Ejemplos y sugerencias:</h4>
                 <div class="tips-grid">
                   <div>
-                    <strong>Tipos de material:</strong><br>Tarjetas visuales, objetos concretos, apps, materiales táctiles, audio.
+                    <strong>Tipos de material:</strong><br>🎨 Tarjetas visuales, objetos concretos, apps, materiales táctiles, audio.
                   </div>
                   <div>
-                    <strong>Estrategias:</strong><br>Terapia Miofuncional, Bobath, Prompt, MIT, LSVT, VitalStim.
+                    <strong>Estrategias:</strong><br>🧠 Terapia Miofuncional, Bobath, Prompt, MIT, LSVT, VitalStim.
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Botón Generar -->
-          <button id="generateBtn" class="generate-btn">
+          <!-- 📄 Referencias Científicas (Subir PDFs) -->
+          <div class="form-card glass">
+            <div class="form-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path><polyline points="16 12 12 8 8 12"></polyline><line x1="12" y1="8" x2="12" y2="20"></line></svg>
+              <h2>📖 Referencias Científicas (Opcional)</h2>
+            </div>
+            <div class="upload-area glass" id="dropZone">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <p>Arrastra archivos PDF aquí o haz clic para seleccionar</p>
+              <input type="file" id="fileInput" accept=".pdf" multiple style="display:none" />
+              <button type="button" class="upload-btn">Seleccionar Archivos</button>
+            </div>
+            <div id="fileList" class="file-list"></div>
+          </div>
+
+          <!-- ✨ Botón Generar -->
+          <button id="generateBtn" class="generate-btn glass">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            Generar Actividad
+            ✨ Generar Actividad con IA
           </button>
         </div>
 
-        <!-- Resultado -->
+        <!-- 📊 Resultado -->
         <div class="result-section">
-          <div id="resultPlaceholder" class="result-placeholder">
+          <div id="resultPlaceholder" class="result-placeholder glass">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            <h3>Actividad Lista para Generar</h3>
+            <h3>🧠 Actividad Lista para Generar</h3>
             <p>Completa los campos y haz clic en "Generar Actividad".</p>
+            <div class="bloom-smart-section">
+              <div class="bloom-card glass">
+                <h4>📚 Taxonomía de Bloom</h4>
+                <div class="bloom-grid">
+                  <div><strong>Recordar:</strong> Reconocer, listar</div>
+                  <div><strong>Comprender:</strong> Interpretar, resumir</div>
+                  <div><strong>Aplicar:</strong> Ejecutar, demostrar</div>
+                  <div><strong>Analizar:</strong> Diferenciar, comparar</div>
+                  <div><strong>Evaluar:</strong> Revisar, criticar</div>
+                  <div><strong>Crear:</strong> Generar, diseñar</div>
+                </div>
+              </div>
+              <div class="smart-card glass">
+                <h4>🎯 Metodología SMART</h4>
+                <div class="smart-grid">
+                  <div><strong>S</strong>pecífico</div>
+                  <div><strong>M</strong>edible</div>
+                  <div><strong>A</strong>lcanzable</div>
+                  <div><strong>R</strong>elevante</div>
+                  <div><strong>T</strong>emporal</div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div id="resultContent" class="result-content hidden">
+          <div id="resultContent" class="result-content hidden glass">
             <div class="result-header">
               <div>
                 <h2 id="resultTitle">Título de la Actividad</h2>
-                <p>Actividad generada con IA</p>
+                <p>✨ Actividad generada con IA</p>
               </div>
-              <button id="downloadBtn" class="download-btn">
+              <button id="downloadBtn" class="download-btn glass" title="Descargar .TXT">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
               </button>
             </div>
