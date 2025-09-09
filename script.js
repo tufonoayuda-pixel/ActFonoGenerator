@@ -47,10 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let activityData;
 
     try {
-      // Aquí podrías pedir una API Key si quisieras, pero para simplicidad, usamos modo híbrido
-      // Simulamos que intentamos IA real, pero siempre usamos lógica local (como el original)
-      // Puedes integrar Gemini aquí si lo deseas (ver versión anterior)
-      
       // Extraer edad
       const age = parseInt(userDescription.value.match(/\d+/)?.[0] || 60);
       const isChild = age < 144 || isPediatric.checked;
