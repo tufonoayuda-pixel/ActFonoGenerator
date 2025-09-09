@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🧠 Generador de Actividades Fonoaudiológicas</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-animation"></div>
+
+  <div class="container">
+    <div class="card glass">
+      <h1>🧠 Generador de Actividades Fonoaudiológicas</h1>
+      <p class="subtitle">Creado con inteligencia artificial para fonoaudiólogos</p>
+
+      <!-- Formulario -->
+      <div id="form-section">
+        <input type="text" id="apiKey" placeholder="🔑 API Key (opcional: deja vacío para modo DEMO)" />
+        <input type="text" id="nombre" placeholder="Nombre del paciente" required />
+        <input type="number" id="edad" placeholder="Edad" min="1" max="18" required />
+        <input type="text" id="diagnostico" placeholder="Diagnóstico (ej: Dislalia)" required />
+        <select id="nivel" required>
+          <option value="">Selecciona nivel</option>
+          <option value="Leve">Leve</option>
+          <option value="Moderado">Moderado</option>
+          <option value="Severo">Severo</option>
+        </select>
+        <textarea id="objetivo" placeholder="Objetivo terapéutico (ej: Mejorar pronunciación del fonema /r/)" required></textarea>
+        <button id="generarBtn" class="btn-primary">✨ Generar Actividad</button>
+      </div>
+
+      <!-- Loading -->
+      <div id="loading" class="loading hidden">
+        <div class="brain-pulse">🧠</div>
+        <p>Generando actividad con IA...</p>
+        <div class="particles">
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+        </div>
+      </div>
+
+      <!-- Resultado -->
+      <div id="result-section" class="hidden">
+        <div class="result-header">
+          <h2>✅ Actividad Generada</h2>
+          <button id="downloadBtn" class="btn-download">💾 Descargar .TXT</button>
+        </div>
+        <div id="result-content" class="result-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
