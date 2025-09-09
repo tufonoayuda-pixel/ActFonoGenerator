@@ -112,6 +112,23 @@
             <div id="fileList" class="file-list"></div>
           </div>
 
+          <!-- 🔑 Campo para API Key -->
+          <div class="form-card glass">
+            <div class="form-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"></path><path d="m16 6-4-4-4 4"></path><path d="M18.7 8.7a4 4 0 0 0-5.4-5.4L12 4.6"></path><path d="M5.3 8.7a4 4 0 0 1 5.4-5.4L12 4.6"></path><path d="M19 15v2a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4v-2"></path><path d="M12 10v10"></path></svg>
+              <h2>🔑 API Key de Google Gemini (Opcional)</h2>
+            </div>
+            <div class="form-group">
+              <label>Ingresa tu API Key para usar IA real (especialmente si subes PDFs)</label>
+              <input id="apiKey" type="password" placeholder="Ej: AIzaSyB... (obtén una en aistudio.google.com)" autocomplete="off">
+              <div class="hint">
+                ⚠️ Sin API Key, se usará modo simulado. Con API Key, ¡actividades personalizadas con IA real!
+                <br>
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #667eea; text-decoration: underline;">Obtén tu API Key gratis aquí</a>
+              </div>
+            </div>
+          </div>
+
           <!-- ✨ Botón Generar -->
           <button id="generateBtn" class="generate-btn glass">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
