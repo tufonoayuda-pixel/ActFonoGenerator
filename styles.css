@@ -258,4 +258,74 @@ body {
   .main-grid {
     grid-template-columns: 1fr;
   }
+  /* 🎓 Footer con créditos */
+.footer {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem 0;
+  margin-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0 2rem;
+}
+
+.footer-logo svg {
+  width: 24px;
+  height: 24px;
+  color: #667eea;
+}
+
+.footer-text {
+  text-align: center;
+  flex: 1;
+}
+
+.footer-text p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  color: white;
+}
+
+.footer-text a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.footer-text a:hover {
+  color: #5063d8;
+  text-decoration: underline;
+}
+
+.footer-badge {
+  background: rgba(102, 126, 234, 0.2);
+  border: 1px solid rgba(102, 126, 234, 0.4);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #a8e6ff;
+}
+
+/* Responsive para footer */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .footer-text p {
+    font-size: 0.9rem;
+  }
+}
 }
