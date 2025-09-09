@@ -166,6 +166,17 @@ body {
   font-style: italic;
 }
 
+.hint a {
+  color: #667eea;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.hint a:hover {
+  color: #5063d8;
+  text-decoration: none;
+}
+
 .checkbox-group {
   display: flex;
   align-items: center;
