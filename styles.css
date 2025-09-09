@@ -753,3 +753,10 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
+/* Estilo para cuando se arrastra sobre el área de drop */
+#dropZone.highlight {
+  border-color: #667eea !important;
+  background: rgba(102, 126, 234, 0.2) !important;
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+}
