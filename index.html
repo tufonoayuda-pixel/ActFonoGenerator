@@ -6,49 +6,124 @@
   <title>🧠 Generador de Actividades Fonoaudiológicas</title>
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <div class="background-animation"></div>
-
   <div class="container">
     <div class="card glass">
-      <h1>🧠 Generador de Actividades Fonoaudiológicas</h1>
-      <p class="subtitle">Creado con inteligencia artificial para fonoaudiólogos</p>
-
-      <!-- Formulario -->
-      <div id="form-section">
-        <input type="text" id="apiKey" placeholder="🔑 API Key (opcional: deja vacío para modo DEMO)" />
-        <input type="text" id="nombre" placeholder="Nombre del paciente" required />
-        <input type="number" id="edad" placeholder="Edad" min="1" max="18" required />
-        <input type="text" id="diagnostico" placeholder="Diagnóstico (ej: Dislalia)" required />
-        <select id="nivel" required>
-          <option value="">Selecciona nivel</option>
-          <option value="Leve">Leve</option>
-          <option value="Moderado">Moderado</option>
-          <option value="Severo">Severo</option>
-        </select>
-        <textarea id="objetivo" placeholder="Objetivo terapéutico (ej: Mejorar pronunciación del fonema /r/)" required></textarea>
-        <button id="generarBtn" class="btn-primary">✨ Generar Actividad</button>
-      </div>
-
-      <!-- Loading -->
-      <div id="loading" class="loading hidden">
-        <div class="brain-pulse">🧠</div>
-        <p>Generando actividad con IA...</p>
-        <div class="particles">
-          <div class="particle"></div>
-          <div class="particle"></div>
-          <div class="particle"></div>
+      <div class="header">
+        <div class="header-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"></path><path d="m16 6-4-4-4 4"></path><path d="M18.7 8.7a4 4 0 0 0-5.4-5.4L12 4.6"></path><path d="M5.3 8.7a4 4 0 0 1 5.4-5.4L12 4.6"></path><path d="M19 15v2a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4v-2"></path><path d="M12 10v10"></path></svg>
+        </div>
+        <div class="header-text">
+          <h1>Generador de Actividades Fonoaudiológicas</h1>
+          <p>Potenciado con Inteligencia Artificial para Fonoaudiólog@s</p>
         </div>
       </div>
 
-      <!-- Resultado -->
-      <div id="result-section" class="hidden">
-        <div class="result-header">
-          <h2>✅ Actividad Generada</h2>
-          <button id="downloadBtn" class="btn-download">💾 Descargar .TXT</button>
+      <div class="main-grid">
+        <!-- Formulario -->
+        <div class="form-section">
+          <!-- Información del Usuario -->
+          <div class="form-card">
+            <div class="form-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <h2>Información del Usuario</h2>
+            </div>
+            <div class="form-group">
+              <label>Descripción del usuario (edad en meses y contexto)</label>
+              <textarea id="userDescription" placeholder="Ej: Niño de 48 meses con retraso en el desarrollo del lenguaje expresivo" rows="3"></textarea>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="isPediatric">
+              <label for="isPediatric">Sesión Pediátrica (lenguaje lúdico adaptado)</label>
+            </div>
+          </div>
+
+          <!-- Objetivo y Sesión -->
+          <div class="form-card">
+            <div class="form-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <h2>Objetivo y Sesión</h2>
+            </div>
+            <div class="form-group">
+              <label>Objetivo específico (basado en Taxonomía de Bloom)</label>
+              <input id="specificObjective" placeholder="Ej: Mejorar la articulación del fonema /r/ en palabras bisílabas">
+              <div class="hint">Niveles Bloom: Recordar → Comprender → Aplicar → Analizar → Evaluar → Crear</div>
+            </div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Duración (minutos)</label>
+                <input id="duration" type="number" min="15" max="120" placeholder="30">
+              </div>
+              <div class="form-group">
+                <label>Tipo de sesión</label>
+                <select id="sessionType">
+                  <option value="individual">Individual</option>
+                  <option value="grupal">Grupal</option>
+                  <option value="hogar">Para el hogar</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contexto Adicional -->
+          <div class="form-card">
+            <button id="toggleAdvanced" class="expand-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"></path><path d="m16 6-4-4-4 4"></path><path d="M18.7 8.7a4 4 0 0 0-5.4-5.4L12 4.6"></path><path d="M5.3 8.7a4 4 0 0 1 5.4-5.4L12 4.6"></path><path d="M19 15v2a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4v-2"></path><path d="M12 10v10"></path></svg>
+              <span>Contexto Adicional (Opcional)</span>
+              <svg id="chevronIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div id="advancedSection" class="advanced-section hidden">
+              <div class="form-group">
+                <label>Contexto adicional detallado</label>
+                <textarea id="customContext" placeholder="Describe aquí todos los aspectos adicionales..." rows="8"></textarea>
+              </div>
+              <div class="tips-box">
+                <h4>💡 Ejemplos y sugerencias:</h4>
+                <div class="tips-grid">
+                  <div>
+                    <strong>Tipos de material:</strong><br>Tarjetas visuales, objetos concretos, apps, materiales táctiles, audio.
+                  </div>
+                  <div>
+                    <strong>Estrategias:</strong><br>Terapia Miofuncional, Bobath, Prompt, MIT, LSVT, VitalStim.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón Generar -->
+          <button id="generateBtn" class="generate-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            Generar Actividad
+          </button>
         </div>
-        <div id="result-content" class="result-content"></div>
+
+        <!-- Resultado -->
+        <div class="result-section">
+          <div id="resultPlaceholder" class="result-placeholder">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <h3>Actividad Lista para Generar</h3>
+            <p>Completa los campos y haz clic en "Generar Actividad".</p>
+          </div>
+
+          <div id="resultContent" class="result-content hidden">
+            <div class="result-header">
+              <div>
+                <h2 id="resultTitle">Título de la Actividad</h2>
+                <p>Actividad generada con IA</p>
+              </div>
+              <button id="downloadBtn" class="download-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              </button>
+            </div>
+            <div class="result-body" id="resultBody">
+              <!-- Contenido dinámico aquí -->
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
