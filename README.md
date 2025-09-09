@@ -5,7 +5,7 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-Lógica-green)
 ![Gemini](https://img.shields.io/badge/Gemini-API-orange)
 
-Genera actividades terapéuticas personalizadas para pacientes con trastornos del lenguaje, usando inteligencia artificial (Google Gemini) o modo simulado.
+Genera actividades terapéuticas personalizadas para usuari@s que necesiten de terapia fonoaudiólogica , usando inteligencia artificial (Google Gemini) o modo simulado.
 
 ## ✨ Características
 
