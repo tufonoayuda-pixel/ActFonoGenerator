@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const selectFilesBtn = document.querySelector('.upload-btn');
   const fileList = document.getElementById('fileList');
 
-  const apiKeyInput = document.getElementById('apiKey');
+  // ✅ ¡API KEY DE GROQ INTEGRADA DIRECTAMENTE!
+  const GROQ_API_KEY = "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"; 
+  const GROQ_MODEL = "llama3-70b-8192";
 
   let isAdvancedOpen = false;
   let uploadedFiles = [];
@@ -134,17 +136,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const apiKey = apiKeyInput.value.trim();
-    if (!apiKey) {
-      alert('⚠️ Por favor ingresa tu API Key de Google Gemini para generar actividades realistas con IA.');
-      return;
-    }
-
     // Mostrar loading
     resultPlaceholder.innerHTML = `
       <div class="loading">
         <div class="loading-icon">🧠</div>
-        <p style="color: #a8e6ff; font-size: 1.2rem; margin-bottom: 1rem;">Generando actividad profesional con IA...</p>
+        <p style="color: #a8e6ff; font-size: 1.2rem; margin-bottom: 1rem;">Generando actividad profesional con IA (Llama 3)...</p>
         ${uploadedFiles.length > 0 ? '<p style="color: #a8e6ff; font-size: 1rem;">Analizando PDFs científicos...</p>' : ''}
         <div class="particles">
           <div class="particle"></div>
@@ -225,22 +221,21 @@ document.addEventListener('DOMContentLoaded', () => {
         IMPORTANTE: La actividad debe ser práctica, realista, basada en evidencia y lista para implementar en una sesión clínica real. Usa un lenguaje profesional pero claro.
       `;
 
-      // Llamar a Gemini API
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
+      // ✅ ¡LLAMADA A LA API DE GROQ!
+      const url = 'https://api.groq.com/openai/v1/chat/completions';
       
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${GROQ_API_KEY}`
         },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.3,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 4096
-          }
+          messages: [{ role: "user", content: prompt }],
+          model: GROQ_MODEL,
+          temperature: 0.3,
+          max_tokens: 4096,
+          top_p: 0.95
         })
       });
 
@@ -251,11 +246,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const data = await response.json();
       
-      if (!data.candidates || !data.candidates[0]?.content?.parts?.[0]?.text) {
+      if (!data.choices || !data.choices[0]?.message?.content) {
         throw new Error("La IA no generó una respuesta válida.");
       }
 
-      const aiText = data.candidates[0].content.parts[0].text;
+      const aiText = data.choices[0].message.content;
       const activityData = parseAITextResponse(aiText);
 
       // Renderizar resultado
