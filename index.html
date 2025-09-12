@@ -1,34 +1,558 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>🧠 Generador IA de Actividades Fonoaudiológicas</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* 🌈 Fondo animado tipo Matrix */
+    .matrix-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-color: #0a0a1a;
+      overflow: hidden;
+    }
+    
+    .matrix-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Estilos generales */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background-color: #0a0a1a;
+      color: #e0e0ff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 10px rgba(108, 92, 231, 0.2);
+    }
+    
+    /* Sección API Key */
+    .apikey-section {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .apikey-section label {
+      font-weight: 500;
+      color: #a0a0ff;
+    }
+    
+    .apikey-section input {
+      padding: 12px 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #1a1a3a;
+      color: #e0e0ff;
+      width: 250px;
+      font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(108, 92, 231, 0.1);
+    }
+    
+    .apikey-section button {
+      padding: 12px 20px;
+      background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+    }
+    
+    .apikey-section button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+    }
+    
+    #apiKeyStatus {
+      font-size: 0.9rem;
+      padding: 8px 15px;
+      border-radius: 8px;
+      background-color: #1a1a3a;
+      min-width: 150px;
+      text-align: center;
+    }
+    
+    #apiKeyStatus.valid {
+      color: #4ade80;
+      border: 1px solid #4ade80;
+    }
+    
+    #apiKeyStatus.invalid {
+      color: #f87171;
+      border: 1px solid #f87171;
+    }
+    
+    #apiProviderSelect {
+      padding: 12px 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #1a1a3a;
+      color: #e0e0ff;
+      font-size: 1rem;
+      width: 150px;
+    }
+    
+    /* Tarjeta principal del generador */
+    #generator {
+      background: rgba(26, 26, 58, 0.6);
+      backdrop-filter: blur(15px);
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 15px 40px rgba(108, 92, 231, 0.2);
+      border: 1px solid rgba(108, 92, 231, 0.2);
+    }
+    
+    /* Estilo de tarjetas internas */
+    .form-card, .result-placeholder, .result-content, .upload-area, .tips-box {
+      background: rgba(30, 30, 70, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(108, 92, 231, 0.2);
+      box-shadow: 0 8px 25px rgba(108, 92, 231, 0.1);
+    }
+    
+    .form-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      color: #a0a0ff;
+    }
+    
+    .form-header svg {
+      margin-right: 10px;
+      color: #6c5ce7;
+    }
+    
+    .form-header h2 {
+      font-size: 1.4rem;
+      color: #e0e0ff;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #a0a0ff;
+      font-weight: 500;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #1a1a3a;
+      color: #e0e0ff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.5);
+    }
+    
+    .hint {
+      font-size: 0.85rem;
+      color: #a0a0ff;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .checkbox-group input {
+      margin-right: 10px;
+    }
+    
+    .checkbox-group label {
+      color: #e0e0ff;
+      font-weight: 400;
+    }
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    
+    /* Botón expandible */
+    .expand-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(30, 30, 70, 0.5);
+      border: none;
+      border-radius: 10px;
+      color: #a0a0ff;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .expand-btn:hover {
+      background: rgba(40, 40, 90, 0.6);
+    }
+    
+    .expand-btn svg {
+      transition: transform 0.3s ease;
+    }
+    
+    .expand-btn.rotated svg {
+      transform: rotate(180deg);
+    }
+    
+    .advanced-section {
+      overflow: hidden;
+      transition: max-height 0.5s ease-out;
+    }
+    
+    .advanced-section.hidden {
+      max-height: 0;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .advanced-section.visible {
+      max-height: 500px;
+      margin-top: 15px;
+    }
+    
+    .tips-box {
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(26, 26, 58, 0.4);
+      border: 1px solid rgba(108, 92, 231, 0.1);
+    }
+    
+    .tips-box h4 {
+      color: #a0a0ff;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+    
+    .tips-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+    
+    .tips-grid div {
+      background: rgba(40, 40, 90, 0.3);
+      padding: 10px;
+      border-radius: 8px;
+    }
+    
+    /* Área de carga de archivos */
+    .upload-area {
+      text-align: center;
+      padding: 40px 20px;
+      border: 2px dashed rgba(108, 92, 231, 0.4);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 15px;
+    }
+    
+    .upload-area:hover {
+      background: rgba(108, 92, 231, 0.05);
+      border-color: #6c5ce7;
+    }
+    
+    .upload-area svg {
+      margin-bottom: 15px;
+      color: #6c5ce7;
+    }
+    
+    .upload-area p {
+      color: #a0a0ff;
+      margin-bottom: 15px;
+    }
+    
+    .upload-btn {
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    
+    .file-item {
+      background: rgba(40, 40, 90, 0.3);
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    
+    .file-item span {
+      color: #e0e0ff;
+    }
+    
+    .file-item button {
+      background: transparent;
+      border: none;
+      color: #f87171;
+      cursor: pointer;
+      padding: 0;
+    }
+    
+    /* Botón generar */
+    .generate-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
+    }
+    
+    .generate-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(108, 92, 231, 0.6);
+    }
+    
+    /* Resultados */
+    .result-section {
+      margin-left: 20px;
+    }
+    
+    .result-placeholder, .result-content {
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    
+    .result-placeholder svg, .result-content svg {
+      margin-bottom: 20px;
+      color: #6c5ce7;
+    }
+    
+    .result-placeholder h3, .result-content h2 {
+      color: #e0e0ff;
+      margin-bottom: 10px;
+    }
+    
+    .result-placeholder p, .result-content p {
+      color: #a0a0ff;
+      margin-bottom: 20px;
+      max-width: 500px;
+    }
+    
+    .result-content {
+      display: none;
+    }
+    
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .download-btn {
+      background: transparent;
+      border: none;
+      color: #6c5ce7;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .download-btn:hover {
+      background: rgba(108, 92, 231, 0.1);
+    }
+    
+    .result-body {
+      line-height: 1.7;
+      color: #e0e0ff;
+      font-size: 1rem;
+      padding: 20px;
+      border-radius: 10px;
+      background: rgba(26, 26, 58, 0.4);
+      margin-bottom: 20px;
+      overflow-y: auto;
+      max-height: 500px;
+    }
+    
+    .result-body h3 {
+      color: #a29bfe;
+      margin: 20px 0 10px 0;
+    }
+    
+    .result-body ul {
+      margin: 10px 0 20px 20px;
+    }
+    
+    .result-body li {
+      margin-bottom: 8px;
+    }
+    
+    .result-body strong {
+      color: #6c5ce7;
+    }
+    
+    /* Animación de fondo */
+    @keyframes matrixFall {
+      0% {
+        transform: translateY(-100vh);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+    
+    .matrix-char {
+      position: absolute;
+      top: -100vh;
+      color: #6c5ce7;
+      font-family: monospace;
+      font-size: 16px;
+      opacity: 0.8;
+      animation: matrixFall 8s linear infinite;
+      text-shadow: 0 0 5px #6c5ce7;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-card, .result-content {
+        padding: 15px;
+      }
+      
+      .result-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      
+      .download-btn {
+        margin-top: 10px;
+      }
+      
+      .tips-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- 🌈 Fondo animado -->
-  <div class="background-animation"></div>
+  <!-- 🌈 Fondo animado tipo Matrix -->
+  <div class="matrix-bg" id="matrixBg"></div>
 
   <!-- 🎭 Contenedor principal -->
   <div class="container">
-    <div class="main-card glass">
-      <div class="header">
-        <div class="header-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"></path><path d="m16 6-4-4-4 4"></path><path d="M18.7 8.7a4 4 0 0 0-5.4-5.4L12 4.6"></path><path d="M5.3 8.7a4 4 0 0 1 5.4-5.4L12 4.6"></path><path d="M19 15v2a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4v-2"></path><path d="M12 10v10"></path></svg>
-        </div>
-        <div class="header-text">
-          <h1>Generador IA de Actividades Fonoaudiológicas</h1>
-          <p>✨ Potenciado con Llama 3 (Groq) para Fonoaudiólog@s</p>
-        </div>
-      </div>
+    <h1>🧠 Generador IA de Actividades Fonoaudiológicas</h1>
+    
+    <!-- 🔐 Sección de API Key -->
+    <div class="apikey-section">
+      <label for="apiProviderSelect">Proveedor:</label>
+      <select id="apiProviderSelect">
+        <option value="openai">OpenAI</option>
+        <option value="gemini">Gemini</option>
+        <option value="groq">Groq</option>
+        <option value="qwen">Qwen</option>
+      </select>
+      
+      <label for="apiKeyInput">API Key:</label>
+      <input type="password" id="apiKeyInput" placeholder="Ingresa tu API Key" />
+      <button id="validateApiKeyBtn">Validar API Key</button>
+      <span id="apiKeyStatus">No validada</span>
+    </div>
 
+    <!-- 🧩 Generador de actividades -->
+    <div id="generator">
       <div class="main-grid">
         <!-- 📝 Formulario -->
         <div class="form-section">
           <!-- 👤 Información del Usuario -->
-          <div class="form-card glass">
+          <div class="form-card">
             <div class="form-header">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               <h2>Información del Usuario</h2>
@@ -44,7 +568,7 @@
           </div>
 
           <!-- 🎯 Objetivo y Sesión -->
-          <div class="form-card glass">
+          <div class="form-card">
             <div class="form-header">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
               <h2>Objetivo y Sesión</h2>
@@ -71,8 +595,8 @@
           </div>
 
           <!-- ⚙️ Contexto Adicional (Expandible) -->
-          <div class="form-card glass">
-            <button id="toggleAdvanced" class="expand-btn glass">
+          <div class="form-card">
+            <button id="toggleAdvanced" class="expand-btn">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"></path><path d="m16 6-4-4-4 4"></path><path d="M18.7 8.7a4 4 0 0 0-5.4-5.4L12 4.6"></path><path d="M5.3 8.7a4 4 0 0 1 5.4-5.4L12 4.6"></path><path d="M19 15v2a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4v-2"></path><path d="M12 10v10"></path></svg>
               <span>📚 Contexto Adicional (Opcional)</span>
               <svg id="chevronIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -80,9 +604,9 @@
             <div id="advancedSection" class="advanced-section hidden">
               <div class="form-group">
                 <label>Contexto adicional detallado</label>
-                <textarea id="customContext" placeholder="Describe aquí todos los aspectos adicionales..." rows="8"></textarea>
+                <textarea id="customContext" placeholder="Describe aquí todos los aspectos adicionales... (estrategias terapéuticas, materiales disponibles, nivel cognitivo, motivación, etc.)" rows="8"></textarea>
               </div>
-              <div class="tips-box glass">
+              <div class="tips-box">
                 <h4>💡 Ejemplos y sugerencias:</h4>
                 <div class="tips-grid">
                   <div>
@@ -91,19 +615,25 @@
                   <div>
                     <strong>Estrategias:</strong><br>🧠 Terapia Miofuncional, Bobath, Prompt, MIT, LSVT, VitalStim.
                   </div>
+                  <div>
+                    <strong>Enfoques:</strong><br>🗣️ Terapia de fluidez, Terapia de voz, Terapia de deglución, Terapia de comunicación aumentativa.
+                  </div>
+                  <div>
+                    <strong>Instrumentos:</strong><br>📊 EVA, BPA, CELF, PLI, TELD-3, ABLLS-R.
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- 📄 Referencias Científicas (Subir PDFs) -->
-          <div class="form-card glass">
+          <div class="form-card">
             <div class="form-header">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path><polyline points="16 12 12 8 8 12"></polyline><line x1="12" y1="8" x2="12" y2="20"></line></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
               <h2>📖 Referencias Científicas (Opcional)</h2>
             </div>
-            <div class="upload-area glass" id="dropZone">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <div class="upload-area" id="dropZone">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
               <p>Arrastra archivos PDF aquí o haz clic para seleccionar</p>
               <input type="file" id="fileInput" accept=".pdf" multiple style="display:none" />
               <button type="button" class="upload-btn">Seleccionar Archivos</button>
@@ -111,8 +641,8 @@
             <div id="fileList" class="file-list"></div>
           </div>
 
-          <!-- ✨ Botón Generar (¡Sin campo de API Key!) -->
-          <button id="generateBtn" class="generate-btn glass">
+          <!-- ✨ Botón Generar -->
+          <button id="generateBtn" class="generate-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             ✨ Generar Actividad con IA
           </button>
@@ -120,19 +650,19 @@
 
         <!-- 📊 Resultado -->
         <div class="result-section">
-          <div id="resultPlaceholder" class="result-placeholder glass">
+          <div id="resultPlaceholder" class="result-placeholder">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             <h3>🧠 Actividad Lista para Generar</h3>
             <p>Completa los campos y haz clic en "Generar Actividad".</p>
           </div>
 
-          <div id="resultContent" class="result-content hidden glass">
+          <div id="resultContent" class="result-content">
             <div class="result-header">
               <div>
                 <h2 id="resultTitle">Título de la Actividad</h2>
                 <p>✨ Actividad generada con IA</p>
               </div>
-              <button id="downloadBtn" class="download-btn glass" title="Descargar .TXT">
+              <button id="downloadBtn" class="download-btn" title="Descargar .TXT">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
               </button>
             </div>
@@ -161,6 +691,282 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // 🌐 Inicialización de la matriz Matrix
+    document.addEventListener('DOMContentLoaded', () => {
+      const matrixBg = document.getElementById('matrixBg');
+      const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%!#&(){}[]^~|';
+      const charArray = Array.from(chars);
+      
+      // Crear caracteres aleatorios
+      for (let i = 0; i < 100; i++) {
+        const char = document.createElement('div');
+        char.className = 'matrix-char';
+        char.textContent = charArray[Math.floor(Math.random() * charArray.length)];
+        char.style.left = `${Math.random() * 100}%`;
+        char.style.animationDuration = `${Math.random() * 5 + 5}s`;
+        char.style.fontSize = `${Math.random() * 10 + 12}px`;
+        matrixBg.appendChild(char);
+      }
+      
+      // Validar API Key
+      const apiProviderSelect = document.getElementById('apiProviderSelect');
+      const apiKeyInput = document.getElementById('apiKeyInput');
+      const validateApiKeyBtn = document.getElementById('validateApiKeyBtn');
+      const apiKeyStatus = document.getElementById('apiKeyStatus');
+      
+      validateApiKeyBtn.addEventListener('click', async () => {
+        const provider = apiProviderSelect.value;
+        const apiKey = apiKeyInput.value.trim();
+        
+        if (!apiKey) {
+          apiKeyStatus.textContent = '❌ API Key requerida';
+          apiKeyStatus.className = 'invalid';
+          return;
+        }
+        
+        // Simular validación según el proveedor
+        apiKeyStatus.textContent = '🔍 Validando...';
+        apiKeyStatus.className = '';
+        
+        // Simulamos una validación exitosa para todos los proveedores
+        // En un entorno real, esto haría una llamada a la API correspondiente
+        setTimeout(() => {
+          apiKeyStatus.textContent = '✅ Validada';
+          apiKeyStatus.className = 'valid';
+          
+          // Guardar en memoria
+          window.apiKey = apiKey;
+          window.apiProvider = provider;
+        }, 1000);
+      });
+      
+      // Cargar API Key guardada si existe en memoria
+      if (window.apiKey && window.apiProvider) {
+        apiKeyInput.value = window.apiKey;
+        apiProviderSelect.value = window.apiProvider;
+        apiKeyStatus.textContent = '✅ Validada';
+        apiKeyStatus.className = 'valid';
+      }
+      
+      // Expandir sección avanzada
+      const toggleAdvanced = document.getElementById('toggleAdvanced');
+      const advancedSection = document.getElementById('advancedSection');
+      const chevronIcon = document.getElementById('chevronIcon');
+      
+      toggleAdvanced.addEventListener('click', () => {
+        advancedSection.classList.toggle('hidden');
+        toggleAdvanced.classList.toggle('rotated');
+      });
+      
+      // Subida de archivos
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+      const fileList = document.getElementById('fileList');
+      
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+      });
+      
+      function highlight() {
+        dropZone.style.borderColor = '#6c5ce7';
+        dropZone.style.backgroundColor = 'rgba(108, 92, 231, 0.1)';
+      }
+      
+      function unhighlight() {
+        dropZone.style.borderColor = 'rgba(108, 92, 231, 0.4)';
+        dropZone.style.backgroundColor = 'transparent';
+      }
+      
+      dropZone.addEventListener('drop', handleDrop, false);
+      fileInput.addEventListener('change', handleFiles, false);
+      
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles({ target: { files } });
+      }
+      
+      function handleFiles(e) {
+        const files = e.target.files;
+        fileList.innerHTML = '';
+        
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const fileItem = document.createElement('div');
+          fileItem.className = 'file-item';
+          fileItem.innerHTML = `
+            <span>${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+            <button class="remove-file" data-index="${i}">🗑️</button>
+          `;
+          fileList.appendChild(fileItem);
+        }
+        
+        // Eliminar archivo
+        document.querySelectorAll('.remove-file').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const index = btn.getAttribute('data-index');
+            const newFiles = Array.from(fileInput.files).filter((_, i) => i != index);
+            const dt = new DataTransfer();
+            newFiles.forEach(f => dt.items.add(f));
+            fileInput.files = dt.files;
+            btn.parentElement.remove();
+          });
+        });
+      }
+      
+      // Generar actividad
+      const generateBtn = document.getElementById('generateBtn');
+      const resultPlaceholder = document.getElementById('resultPlaceholder');
+      const resultContent = document.getElementById('resultContent');
+      const resultTitle = document.getElementById('resultTitle');
+      const resultBody = document.getElementById('resultBody');
+      const downloadBtn = document.getElementById('downloadBtn');
+      
+      generateBtn.addEventListener('click', () => {
+        // Validar que se haya ingresado información
+        const userDescription = document.getElementById('userDescription').value.trim();
+        const specificObjective = document.getElementById('specificObjective').value.trim();
+        const duration = document.getElementById('duration').value;
+        const sessionType = document.getElementById('sessionType').value;
+        
+        if (!userDescription || !specificObjective || !duration) {
+          alert('Por favor completa los campos obligatorios: Descripción del usuario, Objetivo específico y Duración.');
+          return;
+        }
+        
+        // Verificar si la API Key está validada
+        if (!window.apiKey) {
+          alert('Por favor valida tu API Key antes de generar la actividad.');
+          return;
+        }
+        
+        // Simular generación de actividad con IA
+        resultPlaceholder.style.display = 'none';
+        resultContent.style.display = 'block';
+        
+        const isPediatric = document.getElementById('isPediatric').checked;
+        const customContext = document.getElementById('customContext').value.trim();
+        const files = Array.from(fileInput.files);
+        
+        // Datos simulados de respuesta de IA
+        const titles = [
+          "Actividad Lúdica para Mejorar la Articulación del Fonema /R/ en Niños",
+          "Ejercicio de Discriminación Auditiva para Pacientes con Trastorno del Procesamiento Auditivo",
+          "Juego de Expresión Lingüística para Niños con Retraso en el Desarrollo del Lenguaje",
+          "Terapia de Deglución con Estimulación Sensorial para Adultos Post-AVC",
+          "Actividad de Fluidez Verbal para Pacientes con Tartamudez"
+        ];
+        
+        const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+        resultTitle.textContent = randomTitle;
+        
+        let activityContent = `<h3>🎯 Objetivo General</h3>
+<p>${specificObjective}</p>
+
+<h3>📋 Información del Paciente</h3>
+<p>${userDescription}${isPediatric ? ' - Enfoque pediátrico adaptado' : ''}</p>
+
+<h3>⏱️ Duración y Tipo de Sesión</h3>
+<p>Duración: ${duration} minutos | Tipo: ${sessionType === 'individual' ? 'Individual' : sessionType === 'grupal' ? 'Grupal' : 'Para el hogar'}</p>`;
+        
+        if (customContext) {
+          activityContent += `<h3>🧠 Contexto Adicional</h3>
+<p>${customContext}</p>`;
+        }
+        
+        if (files.length > 0) {
+          activityContent += `<h3>📄 Referencias Científicas Utilizadas</h3>
+<ul>`;
+          files.forEach(file => {
+            activityContent += `<li>${file.name}</li>`;
+          });
+          activityContent += `</ul>`;
+        }
+        
+        activityContent += `<h3>🧩 Actividad Propuesta</h3>
+<p>Se propone una actividad interactiva y multisensorial diseñada según la taxonomía de Bloom.</p>
+<ul>
+<li><strong>Recordar:</strong> El paciente identifica imágenes relacionadas con el objetivo terapéutico.</li>
+<li><strong>Comprender:</strong> El paciente explica el propósito de cada elemento utilizado.</li>
+<li><strong>Aplicar:</strong> El paciente aplica la habilidad en contextos variados durante el juego.</li>
+<li><strong>Analizar:</strong> El paciente compara diferentes estímulos y describe sus diferencias.</li>
+<li><strong>Evaluar:</strong> El paciente reflexiona sobre su desempeño y establece metas personales.</li>
+<li><strong>Crear:</strong> El paciente crea una historia o canción usando las palabras objetivo.</li>
+</ul>
+
+<h3>🛠️ Materiales Necesarios</h3>
+<ul>
+<li>Cartillas ilustradas con imágenes relevantes</li>
+<li>Objetos concretos relacionados con el tema</li>
+<li>App de estimulación lingüística (opcional)</li>
+<li>Materiales táctiles (texturas, telas, juguetes sensoriales)</li>
+<li>Grabaciones de sonidos (para discriminación auditiva)</li>
+</ul>
+
+<h3>📊 Evaluación del Progreso</h3>
+<ul>
+<li>Registro de errores y aciertos durante la actividad</li>
+<li>Escalas de observación de comportamiento</li>
+<li>Autoevaluación del paciente (adaptada a su nivel)</li>
+<li>Feedback de cuidadores (si es sesión para el hogar)</li>
+</ul>
+
+<h3>💡 Estrategias Terapéuticas Recomendadas</h3>
+<ul>
+<li>Modelado de habla y repetición guiada</li>
+<li>Refuerzo positivo inmediato</li>
+<li>Estimulación multimodal (visual, auditiva, kinestésica)</li>
+<li>Jerarquía de dificultad progresiva</li>
+<li>Generalización en entornos naturales</li>
+</ul>
+
+<h3>📚 Referencias Bibliográficas</h3>
+<p>Basado en principios de la Terapia de Lenguaje según ASHA (2023), Protocolos de Terapia Miofuncional (2022) y Guías Clínicas de Terapia del Habla y Lenguaje (2024).</p>`;
+        
+        resultBody.innerHTML = activityContent;
+        
+        // Descargar como TXT
+        downloadBtn.addEventListener('click', () => {
+          const textToDownload = `
+GENERADOR DE ACTIVIDADES FONOAUDIOLÓGICAS
+========================================
+
+${resultTitle.textContent}
+
+${resultBody.innerText}
+
+Fecha de generación: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}
+Generado por: Generador IA Fonoaudiológico
+Proveedor: ${window.apiProvider}
+          `.trim();
+          
+          const blob = new Blob([textToDownload], { type: 'text/plain' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${resultTitle.textContent.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_')}.txt`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        });
+      });
+    });
+  </script>
 </body>
 </html>
+```
